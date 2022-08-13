@@ -8,7 +8,14 @@ feed_url = 'http://jvndb.jvn.jp/rss/ja/jvndb.rdf'
 doc = Nokogiri::XML(URI.open(feed_url), &:noblanks)
 
 doc.xpath('//xmlns:item').each do |item|
-  item.remove if item.xpath('sec:cvss[@version="3.0" and @score < "8.0"]', 'sec': 'http://jvn.jp/rss/mod_sec/').size > 0
+  if item.xpath('sec:cvss[@version="3.0" and @score < "8.0"]', 'sec': 'http://jvn.jp/rss/mod_sec/').size > 0
+    # 要素の一覧を指していると思しきchannel/items/rdf:Seq/rdf:liの要素を削除する
+    resource_url = item.attributes['about']
+    li_item = doc.xpath("//rdf:li[@rdf:resource='#{resource_url}']")
+    li_item.remove
+
+    item.remove
+  end
 end
 
 FileUtils.mkdir_p('./artifact')
