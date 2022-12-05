@@ -45,3 +45,5 @@ jobs:
         uses: actions/deploy-pages@main
       # for preventing to disable github action schedule
       - uses: gautamkrishnar/keepalive-workflow@v1
+        with:
+          time_elapsed: 1
