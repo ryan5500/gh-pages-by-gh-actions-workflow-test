@@ -2,6 +2,16 @@ require 'nokogiri'
 require 'open-uri'
 require 'fileutils'
 
+
+# refer: https://qiita.com/yama660/items/7f99180f23934017ff40
+require 'net/http'
+Net::HTTP.prepend Module.new {
+  def use_ssl=(flag)
+    super
+    self.ciphers = "DEFAULT:!DH"
+  end
+}
+
 feed_url = 'http://jvndb.jvn.jp/rss/ja/jvndb.rdf'
 
 # 改行を1 itemとしてparseしてしまうのでnoblanksオプションを追加
